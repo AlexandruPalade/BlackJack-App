@@ -1,0 +1,119 @@
+<div class="main-container">
+  <div class="top-container">
+    <div class="cards-container">
+      <div class="cards">
+        <label id="dealerCards">Dealer Cards:</label>
+        <div *ngFor="let dealCard of dealerCards">
+          <span>{{ dealCard.rank }} {{ dealCard.suite }}</span>
+        </div>
+        <span *ngIf="dealerSum !== 0">{{ dealerSum }}</span>
+      </div>
+
+      <span *ngIf="response.winAmount < 0" class="dealer-message"
+        >Dealer win</span
+      >
+      <span *ngIf="response.winAmount > 0" class="player-message"
+        >Player win</span
+      >
+
+      <div class="cards">
+        <label id="playerCards">Player Cards:</label>
+        <div *ngFor="let playerCard of playerCards">
+          <span>{{ playerCard.rank }} {{ playerCard.suite }}</span>
+        </div>
+
+        <span *ngIf="playerSum !== 0">{{ playerSum }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-container">
+    <div class="player-money">
+      <form
+        [formGroup]="balanceForm"
+        *ngIf="playerBalance === 0 || endGame === true"
+      >
+        <input
+          type="number"
+          [formControlName]="'balance'"
+          placeholder="Balance"
+        />
+        <button (click)="onClickSit()" class="form-button">Sit</button>
+      </form>
+
+      <form
+        [formGroup]="betForm"
+        *ngIf="playerBalance > 0 && endGame === false"
+      >
+        <select [formControlName]="'bet'" class="player-bets">
+          <option [ngValue]="null" disabled>Choose your bet</option>
+          <option
+            *ngFor="let option of sitResponse.availableBetOptions"
+            [ngValue]="option"
+          >
+            {{ option }}
+          </option>
+        </select>
+
+        <button
+          (click)="onClickDeal()"
+          [disabled]="buttonsStatus"
+          class="form-button"
+        >
+          Deal
+        </button>
+      </form>
+
+      <div class="details">
+        <div>
+          <label id="playerBalance">Player balance: </label>
+          <span>{{ playerBalance }}$</span>
+        </div>
+
+        <div *ngIf="endGame === true">
+          <div>
+            <label>Win Amount:</label> <span>{{ winAmount }}$</span>
+          </div>
+
+          <div>
+            <label>Rounds played:</label> <span>{{ roundsPlayed }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="buttons-container">
+      <button
+        class="action-button hit-button"
+        (click)="onHitClick()"
+        [disabled]="buttonsStatus"
+      >
+        Hit
+      </button>
+
+      <button
+        class="action-button stay-button"
+        (click)="onStayClick()"
+        [disabled]="buttonsStatus"
+      >
+        Stay
+      </button>
+
+      <button
+        class="action-button stand-button"
+        (click)="onStandClick()"
+        [disabled]="buttonsStatus"
+      >
+        Stand
+      </button>
+
+      <button
+        class="action-button restart-button"
+        (click)="onRestartClick()"
+        [disabled]="!(response.winAmount > 0 || response.winAmount < 0)"
+      >
+        Restart Game
+      </button>
+    </div>
+  </div>
+</div>
